@@ -1,0 +1,12 @@
+1. *Rendimiento*:
+   - El servicio logró mantener un tiempo de respuesta adecuado en la mayoría de las peticiones, cumpliendo con los criterios de menos de 1,5 segundos en un 95% de las ocasiones.
+
+2. *Tasa de Errores*:
+   - Se logró mantener una tasa de error por debajo del 3%, lo cual es aceptable según las condiciones.
+   - por lo que las pruebas en base a los tps son satisfactorias
+
+3. *Recomendaciones*:
+   - Considerar incrementos en el número de TPS para evaluar el escalamiento.
+   - El servicio no responde un status 200 , si no un 201 configurar bien el assert para evitar falsos positivos
+   - Considerar que el servicio es un generador de token por buenas practicas deberia responder 200 no 201 ya que no esta creando registro
+   - la data en el test dispone de un número limitado de datos, por lo que en cierto punto la prueba no sera real ya que , se debe tener en cuenta que los servidores cahean datos.
