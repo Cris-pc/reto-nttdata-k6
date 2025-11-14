@@ -1,0 +1,45 @@
+name: K6 Performance Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  run-k6-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg software-properties-common curl
+          curl -s https://dl.k6.io/key.gpg | sudo apt-key add -
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6 python3 python3-pip
+
+      - name: Install Python dependencies
+        run: pip3 install pandas
+
+      - name: Create results folder
+        run: mkdir -p results
+
+      - name: Run k6 test
+        run: k6 run --out json=results/output.json reto-Nttdata-Performance.js
+
+      - name: Transform JSON to CSV and HTML
+        run: python3 json_to_report.py
+
+      - name: List results folder
+        run: ls -l results
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-test-results
+          path: results/*
